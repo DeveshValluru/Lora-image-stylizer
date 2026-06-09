@@ -29,6 +29,13 @@ README.md
 SPEC.md
 loras/README.md
 
+# Inside loras/, keep only the final .safetensors per style.
+# Strip training-time checkpoints and tensorboard logs (heavy and not used at inference).
+loras/**/checkpoint-*/
+loras/**/logs/
+loras/**/*.bin
+loras/**/*.pkl
+
 # Generated test images
 test_*.png
 stylized*.png

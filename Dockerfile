@@ -45,6 +45,11 @@ RUN pip install --upgrade pip \
 COPY serve.py .
 COPY configs/ ./configs/
 
+# Bake the trained LoRAs into the image so the container is self-contained.
+# Recipients can still override by mounting a different ./loras as a volume
+# (volume mount takes precedence over baked-in files).
+COPY loras/ ./loras/
+
 EXPOSE 8000
 
 HEALTHCHECK --interval=30s --timeout=10s --start-period=120s --retries=3 \
