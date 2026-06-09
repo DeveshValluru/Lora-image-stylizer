@@ -1,8 +1,10 @@
---extra-index-url https://download.pytorch.org/whl/cu124
+--extra-index-url https://download.pytorch.org/whl/cu128
 
 # --- CUDA-pinned wheels (PyTorch index) ---
-torch==2.5.1+cu124
-torchvision==0.20.1+cu124
+# torch 2.7+ required by recent transformers (uses torch.float8_e8m0fnu).
+# cu128 channel is the right one for torch 2.7+ — cu124 only goes up to 2.6.
+torch>=2.7
+torchvision>=0.22
 
 # --- Diffusion + LoRA training stack ---
 diffusers[training]>=0.30
