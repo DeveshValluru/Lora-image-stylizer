@@ -1,0 +1,24 @@
+--extra-index-url https://download.pytorch.org/whl/cu124
+
+# --- CUDA-pinned wheels (PyTorch index) ---
+torch==2.5.1+cu124
+torchvision==0.20.1+cu124
+
+# --- Diffusion + LoRA training stack ---
+diffusers[training]>=0.30
+transformers>=4.46
+accelerate>=1.1
+peft>=0.13
+datasets>=3.0
+bitsandbytes>=0.44
+safetensors
+
+# --- Inference server ---
+fastapi
+uvicorn[standard]
+gradio
+
+# --- Utilities ---
+pyyaml
+pillow
+tqdm

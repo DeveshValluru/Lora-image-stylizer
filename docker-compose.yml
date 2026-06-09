@@ -1,0 +1,43 @@
+# Docker Compose for the LoRA stylizer inference service.
+#
+#   - Builds from the local Dockerfile.
+#   - Mounts ./loras read-only so you train on the host and the container
+#     serves whatever weights are present.
+#   - Persists the HF cache to a named volume so SD 1.5 is downloaded once
+#     across restarts (~5 GB).
+#   - Requires NVIDIA Container Toolkit for GPU passthrough.
+
+services:
+  stylizer:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: lora-stylizer:latest
+    container_name: lora-stylizer
+    ports:
+      - "8000:8000"
+    volumes:
+      # Trained LoRAs from the host (read-only — inference never writes them)
+      - ./loras:/app/loras:ro
+      # Persist the HF model cache so SD 1.5 weights survive `docker compose down`
+      - hf-cache:/root/.cache/huggingface
+    environment:
+      # Optional — only needed if your LoRA loading hits any gated/private repos
+      - HF_TOKEN=${HF_TOKEN:-}
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [gpu]
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-fsS", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      start_period: 120s
+      retries: 3
+
+volumes:
+  hf-cache:

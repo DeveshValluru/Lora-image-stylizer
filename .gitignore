@@ -1,0 +1,82 @@
+# ------------------------------------------------------------------------- #
+# Python
+# ------------------------------------------------------------------------- #
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+*.egg-info/
+build/
+dist/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# ------------------------------------------------------------------------- #
+# Virtual environments
+# ------------------------------------------------------------------------- #
+loratraining/
+.venv/
+venv/
+env/
+ENV/
+
+# ------------------------------------------------------------------------- #
+# IDE / editor / OS
+# ------------------------------------------------------------------------- #
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Claude Code session state
+.claude/
+
+# ------------------------------------------------------------------------- #
+# Datasets / Hugging Face cache (never commit)
+# ------------------------------------------------------------------------- #
+.cache/
+hf_cache/
+
+# ------------------------------------------------------------------------- #
+# Model weights and training artifacts
+# ------------------------------------------------------------------------- #
+# Trained adapters live in loras/ but we don't commit weights — too big.
+# Keep the directory structure via loras/README.md, gitignore everything else.
+loras/*
+!loras/README.md
+
+# Catch-all binary weights anywhere else
+*.safetensors
+*.bin
+*.pt
+*.pth
+*.ckpt
+
+# Diffusers / accelerate / TensorBoard training artifacts
+checkpoint-*/
+runs/
+wandb/
+tensorboard/
+events.out.tfevents.*
+logs/
+
+# ------------------------------------------------------------------------- #
+# Generated test / example images at project root
+# ------------------------------------------------------------------------- #
+test_*.png
+stylized*.png
+
+# ------------------------------------------------------------------------- #
+# Secrets / local config
+# ------------------------------------------------------------------------- #
+.env
+.env.local
+.env.*.local
+*.token
+hf_token*
+HF_TOKEN

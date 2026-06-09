@@ -1,0 +1,65 @@
+# Per-style configuration consumed by data_prep.py, train_lora.py, and serve.py.
+# Edit values here rather than hardcoding them in the scripts.
+
+base_model: stable-diffusion-v1-5/stable-diffusion-v1-5
+
+# Shared training defaults. Each style can override any of these via train_overrides.
+defaults:
+  resolution: 512
+  lora_rank: 16
+  lora_alpha: 16
+  lora_target_modules: [to_q, to_k, to_v, to_out.0]
+  optimizer: adamw_8bit
+  learning_rate: 1.0e-4
+  lr_scheduler: constant
+  lr_warmup_steps: 100
+  per_device_batch_size: 2
+  gradient_accumulation_steps: 4
+  mixed_precision: bf16
+  gradient_checkpointing: true
+  random_flip: true
+  caption_dropout: 0.05
+  max_train_steps: 1500
+  validation_every: 250
+  validation_prompts:
+    - "a portrait of a young woman, {trigger}"
+    - "a city street at night, {trigger}"
+    - "a mountain landscape at sunset, {trigger}"
+    - "a cat sitting on a windowsill, {trigger}"
+  negative_prompt: "blurry, low quality, distorted, watermark, text"
+
+styles:
+
+  pixel_art:
+    dataset: m1guelpf/nouns
+    filter: null
+    trigger: pxlart_style
+    caption_source: included       # dataset ships auto-generated captions in the `text` column
+    caption_template: "{caption}, {trigger}"
+    max_samples: 2000              # subsample from the full 49,859 — style is uniform, more is wasteful
+    train_overrides:
+      max_train_steps: 1200        # ~2k subsample; few epochs to avoid overfit
+
+  ukiyoe:
+    dataset: huggan/wikiart
+    filter:
+      column: style
+      # NOTE: exact label string is verified in data_prep.py before training.
+      # Alternates to try if mismatched: "Ukiyo-e", "Ukiyo_e", "ukiyo-e".
+      value: Ukiyo_e
+    trigger: ukyoe_style
+    caption_source: wikiart_captions   # fall back to blip2 if missing
+    caption_template: "{caption}, {trigger}"
+    train_overrides:
+      max_train_steps: 1500
+
+  van_gogh:
+    dataset: huggan/wikiart
+    filter:
+      column: artist
+      value: vincent-van-gogh
+    trigger: vngogh_style
+    caption_source: wikiart_captions
+    caption_template: "{caption}, {trigger}"
+    train_overrides:
+      max_train_steps: 2000        # largest dataset, longer to converge

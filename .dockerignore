@@ -1,0 +1,49 @@
+# Keep the Docker build context small — the inference image only needs
+# serve.py + configs/ + requirements.txt. Everything else is excluded.
+
+# Virtual env (host-only)
+loratraining/
+.venv/
+venv/
+
+# Hugging Face cache (mounted as a volume at runtime, not baked in)
+.cache/
+
+# Python bytecode
+__pycache__/
+*.pyc
+*.pyo
+
+# Git + IDE + OS
+.git/
+.gitignore
+.gitattributes
+.vscode/
+.idea/
+.claude/
+.DS_Store
+Thumbs.db
+
+# Docs — not needed inside the container
+README.md
+SPEC.md
+loras/README.md
+
+# Generated test images
+test_*.png
+stylized*.png
+
+# Training-only scripts — image is for serving, not training
+scripts/train_text_to_image_lora.py
+scripts/prep_pixel_art.py
+scripts/prep_wikiart.py
+scripts/explore_pixel_art.py
+scripts/explore_wikiart.py
+scripts/check_env.py
+scripts/test_lora.py
+
+# Docker build files (not needed inside the image they build)
+Dockerfile
+.dockerignore
+docker-compose.yml
+docker-compose.*.yml
